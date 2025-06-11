@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './App.css' 
 import Search from './components/Search'
 import Spinner from './components/Spinner';
+import MovieCard from './components/MovieCard';
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -27,11 +28,13 @@ const App = () => {
         const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
         const response = await fetch(endpoint, API_OPTIONS);
+        
       
         if(!response.ok){
           throw new Error("Failed to fetch movies.");
         } 
         const data = await response.json();
+        console.log(data);
 
         if(data.Response === "false"){
           setErrorMessage(data.Error || "Failed to fetch movies");
@@ -43,7 +46,7 @@ const App = () => {
       
     } catch (error) {
         console.error(`Error fetching movies ${error}`);
-        setErrorMessage("Error fetching movies. please try again later.")
+        setErrorMessage("Error fetching movies. please try again later.");
     } finally{
       setIsLoading(false);
     }
@@ -74,7 +77,7 @@ const App = () => {
               <p className='text-red-500'>{errorMessage}</p>
             ) : (
               <ul>
-                  {movieList.map((movie)=> (<p key={movie.id} className='text-white'>{movie.title}</p>)  )}
+                  {movieList.map((movie)=>(<MovieCard key={movie.id} movie={movie}/>))}
               </ul>
             )
 
